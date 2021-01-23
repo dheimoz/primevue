@@ -24,13 +24,13 @@
 </template>
 
 <script>
-import ObjectUtils from '../utils/ObjectUtils';
-import DomHandler from '../utils/DomHandler';
-import Ripple from '../ripple/Ripple';
+import {ObjectUtils} from 'primevue/utils';
+import {DomHandler} from 'primevue/utils';
+import Ripple from 'primevue/ripple';
 
 export default {
     name: 'sub-ttnode',
-    emits: ['node-click', 'node-toggle', 'checkbox-change'],
+    emits: ['node-click', 'node-toggle', 'checkbox-change','nodeClick', 'nodeToggle', 'checkboxChange'],
     props: {
         node: {
             type: null,

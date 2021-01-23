@@ -26,9 +26,8 @@
     </div>
 </template>
 <script>
-import UniqueComponentId from '../utils/UniqueComponentId';
-import DomHandler from '../utils/DomHandler';
-import Ripple from '../ripple/Ripple';
+import {UniqueComponentId,DomHandler} from 'primevue/utils';
+import Ripple from 'primevue/ripple';
 
 export default {
     inheritAttrs: false,
@@ -410,5 +409,10 @@ export default {
 .p-dialog-bottomright {
     justify-content: flex-end;
     align-items: flex-end;
+}
+
+.p-confirm-dialog .p-dialog-content {
+    display: flex;
+    align-items: center;
 }
 </style>

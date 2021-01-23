@@ -61,8 +61,8 @@ import Password from 'primevue/password';
                             <tr>
                                 <td>promptLabel</td>
                                 <td>string</td>
-                                <td>Enter a password</td>
-                                <td>Text to prompt password entry.</td>
+                                <td>null</td>
+                                <td>Text to prompt password entry. Defaults to PrimeVue <router-link to="/locale">Locale</router-link> configuration.</td>
                             </tr>
                             <tr>
                                 <td>mediumRegex</td>
@@ -79,20 +79,20 @@ import Password from 'primevue/password';
                             <tr>
                                 <td>weakLabel</td>
                                 <td>string</td>
-                                <td>Weak</td>
-                                <td>Text for a weak password.</td>
+                                <td>null</td>
+                                <td>Text for a weak password. Defaults to PrimeVue <router-link to="/locale">Locale</router-link> configuration.</td>
                             </tr>
                             <tr>
                                 <td>mediumLabel</td>
                                 <td>string</td>
-                                <td>Medium</td>
-                                <td>Text for a medium password.</td>
+                                <td>null</td>
+                                <td>Text for a medium password. Defaults to PrimeVue <router-link to="/locale">Locale</router-link> configuration.</td>
                             </tr>
                             <tr>
                                 <td>strongLabel</td>
                                 <td>string</td>
-                                <td>Strong</td>
-                                <td>Text for a strong password.</td>
+                                <td>null</td>
+                                <td>Text for a strong password. Defaults to PrimeVue <router-link to="/locale">Locale</router-link> configuration.</td>
                             </tr>
                             <tr>
                                 <td>feedback</td>
@@ -139,9 +139,12 @@ import Password from 'primevue/password';
 			</TabPanel>
 
 			<TabPanel header="Source">
-				<a href="https://github.com/primefaces/primevue/tree/master/src/views/password" class="btn-viewsource" target="_blank" rel="noopener noreferrer">
-					<span>View on GitHub</span>
-				</a>
+                <div class="p-d-flex p-jc-between">
+                    <a href="https://github.com/primefaces/primevue/tree/master/src/views/password" class="btn-viewsource" target="_blank" rel="noopener noreferrer">
+                        <span>View on GitHub</span>
+                    </a>
+                    <LiveEditor name="PasswordDemo" :sources="sources"/>
+                </div>
 <pre v-code>
 <code>
 &lt;Password v-model="value" /&gt;
@@ -163,3 +166,38 @@ export default {
 		</TabView>
 	</div>
 </template>
+
+<script>
+import LiveEditor from '../liveeditor/LiveEditor';
+export default {
+    data() {
+        return {
+            sources: {
+                'template': {
+                    content: `<template>
+    <div class="layout-content">
+        <div class="content-section implementation">
+            <div class="card">
+                <Password v-model="value" placeholder="Password"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+            value: ''
+        }
+    }
+}`
+                }
+            }
+        }
+    },
+    components: {
+        LiveEditor
+    }
+}
+</script>

@@ -1,7 +1,7 @@
 <template>
     <transition name="p-overlaypanel" @enter="onEnter" @leave="onLeave">
         <div class="p-overlaypanel p-component" v-if="visible" :ref="containerRef">
-            <div class="p-overlaypanel-content">
+            <div class="p-overlaypanel-content" @click="onContentClick">
                 <slot></slot>
             </div>
             <button class="p-overlaypanel-close p-link" @click="hide" v-if="showCloseIcon" :aria-label="ariaCloseLabel" type="button" v-ripple>
@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import ConnectedOverlayScrollHandler from '../utils/ConnectedOverlayScrollHandler';
-import DomHandler from '../utils/DomHandler';
-import Ripple from '../ripple/Ripple';
+import {ConnectedOverlayScrollHandler} from 'primevue/utils';
+import {DomHandler} from 'primevue/utils';
+import Ripple from 'primevue/ripple';
 
 export default {
     props: {
@@ -48,6 +48,7 @@ export default {
             visible: false
         }
     },
+    selfClick: false,
     target: null,
     outsideClickListener: null,
     scrollHandler: null,
@@ -81,6 +82,9 @@ export default {
         hide() {
             this.visible = false;
         },
+        onContentClick() {
+            this.selfClick = true;
+        },
         onEnter() {
             this.appendContainer();
             this.alignOverlay();
@@ -103,16 +107,26 @@ export default {
         alignOverlay() {
             DomHandler.absolutePosition(this.container, this.target);
 
-            if (DomHandler.getOffset(this.container).top < DomHandler.getOffset(this.target).top) {
+            const containerOffset = DomHandler.getOffset(this.container);
+            const targetOffset = DomHandler.getOffset(this.target);
+            let arrowLeft = 0;
+
+            if (containerOffset.left < targetOffset.left) {
+                arrowLeft = targetOffset.left - containerOffset.left;
+            }
+            this.container.style.setProperty('--overlayArrowLeft', `${arrowLeft}px`);
+
+            if (containerOffset.top < targetOffset.top) {
                 DomHandler.addClass(this.container, 'p-overlaypanel-flipped');
             }
         },
         bindOutsideClickListener() {
             if (!this.outsideClickListener) {
                 this.outsideClickListener = (event) => {
-                    if (this.visible && this.container && !this.container.contains(event.target) && !this.isTargetClicked(event)) {
+                    if (this.visible && !this.selfClick && !this.isTargetClicked(event)) {
                         this.visible = false;
                     }
+                    this.selfClick = false;
                 };
                 document.addEventListener('click', this.outsideClickListener);
             }
@@ -121,6 +135,7 @@ export default {
             if (this.outsideClickListener) {
                 document.removeEventListener('click', this.outsideClickListener);
                 this.outsideClickListener = null;
+                this.selfClick = false;
             }
         },
         bindScrollListener() {
@@ -223,7 +238,7 @@ export default {
 
 .p-overlaypanel:after, .p-overlaypanel:before {
 	bottom: 100%;
-	left: 1.25rem;
+	left: calc(var(--overlayArrowLeft, 0) + 1.25rem);
 	content: " ";
 	height: 0;
 	width: 0;

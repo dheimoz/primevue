@@ -10,7 +10,7 @@ import FullCalendar from 'primevue/fullcalendar';
 </code></pre>
 
 				<h5>Getting Started</h5>
-				<p>FullCalendar is a wrapper around on <a href="https://fullcalendar.io/docs/v4">FullCalendar 4.0.0+</a> so fullcalendar needs to be included in your project.
+				<p>FullCalendar is a wrapper around on <a href="https://fullcalendar.io/docs/v4">FullCalendar 5.4.0+</a> so fullcalendar needs to be included in your project.
                 For a complete documentation and samples please refer to the <a href="https://fullcalendar.io/">fullcalendar website</a>.</p>
 <pre v-code>
 <code>
@@ -24,15 +24,6 @@ npm install @fullcalendar/core --save
 npm install @fullcalendar/daygrid --save
 npm install @fullcalendar/timegrid --save
 npm install @fullcalendar/interaction --save
-
-</code></pre>
-
-                <p>Include the core style and the styles of the plugins that you use in your application.</p>
-<pre v-code>
-<code>
-import '@fullcalendar/core/main.min.css';
-import '@fullcalendar/daygrid/main.min.css';
-import '@fullcalendar/timegrid/main.min.css';
 
 </code></pre>
 
@@ -99,6 +90,7 @@ export default class EventService {
 	getEvents() {
 		return axios.get('demo/data/events.json').then(res => res.data.data);
 	}
+
 }
 
 </code></pre>
@@ -144,8 +136,8 @@ export default {
         return {
             options: {
                 plugins:[dayGridPlugin, timeGridPlugin, interactionPlugin],
-                defaultDate: '2019-01-01',
-                header: {
+                initialDate: '2019-01-01',
+                headerToolbar: {
                     left: 'prev,next',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
@@ -175,8 +167,8 @@ export default {
         return {
             options: {
                 plugins:[dayGridPlugin, timeGridPlugin, interactionPlugin],
-                defaultDate: '2019-01-01',
-                header: {
+                initialDate: '2019-01-01',
+                headerToolbar: {
                     left: 'prev,next',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
@@ -223,9 +215,12 @@ export default {
 			</TabPanel>
 
 			<TabPanel header="Source">
-				<a href="https://github.com/primefaces/primevue/tree/master/src/views/fullcalendar" class="btn-viewsource" target="_blank" rel="noopener noreferrer">
-					<span>View on GitHub</span>
-				</a>
+				<div class="p-d-flex p-jc-between">
+					<a href="https://github.com/primefaces/primevue/tree/master/src/views/fullcalendar" class="btn-viewsource" target="_blank" rel="noopener noreferrer">
+						<span>View on GitHub</span>
+					</a>
+					<LiveEditor name="FullCalendarDemo" :sources="sources" service="EventService" data="events"/>
+                </div>
 <pre v-code>
 <code><template v-pre>
 &lt;FullCalendar :events="events" :options="options" /&gt;
@@ -244,8 +239,8 @@ export default {
         return {
             options: {
                 plugins:[dayGridPlugin, timeGridPlugin, interactionPlugin],
-                defaultDate: '2019-01-01',
-                header: {
+                initialDate: '2019-01-01',
+                headerToolbar: {
                     left: 'prev,next',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
@@ -269,3 +264,69 @@ export default {
 		</TabView>
 	</div>
 </template>
+
+<script>
+import LiveEditor from '../liveeditor/LiveEditor';
+export default {
+	data() {
+		return {
+			sources: {
+				'template': {
+					content: `<template>
+    <div class="layout-content">
+        <div class="content-section implementation">
+            <div class="card">
+                <FullCalendar :events="events" :options="options" />
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import EventService from '../service/EventService';
+
+export default {
+    data() {
+        return {
+            options: {
+                plugins:[dayGridPlugin, timeGridPlugin, interactionPlugin],
+                initialDate : '2017-02-01',
+                headerToolbar: {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                editable: true
+            },
+            events: null
+        };
+    },
+    eventService: null,
+    created() {
+        this.eventService = new EventService();
+    },
+    mounted() {
+        this.eventService.getEvents().then(data => this.events = data);
+    }
+}`,
+					style: `<style scoped>
+@media screen and (max-width: 960px) {
+    ::v-deep(.fc-header-toolbar) {
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+</style>`
+				}
+			}
+		}
+	},
+	components: {
+		LiveEditor
+	}
+}
+</script>

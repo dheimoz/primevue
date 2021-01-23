@@ -1,9 +1,9 @@
 import Vue, { VNode } from 'vue';
 
-export declare class AutoComplete extends Vue {
+declare class AutoComplete extends Vue {
     modelValue?: any;
     suggestions?: any[];
-    field?: string;
+    field?: string|function;
     scrollHeight?: string;
     dropdown?: boolean;
     dropdownMode?: string;
@@ -20,3 +20,5 @@ export declare class AutoComplete extends Vue {
         list: VNode[];
     };
 }
+
+export default AutoComplete;

@@ -18,17 +18,18 @@
                 <sub-menu :model="item.items" v-if="visible(item) && item.items" :key="item.label + '_sub_'" :mobileActive="mobileActive"
                     @leaf-click="onLeafClick" @keydown-item="onChildItemKeyDown" :parentActive="item === activeItem" />
             </li>
-            <li class="p-menu-separator" :style="item.style" v-if="visible(item) && item.separator" :key="'separator' + i" role="separator"></li>
+            <li :class="['p-menu-separator', item.class]" :style="item.style" v-if="visible(item) && item.separator" :key="'separator' + i" role="separator"></li>
         </template>
     </ul>
 </template>
 
 <script>
-import DomHandler from '../utils/DomHandler';
-import Ripple from '../ripple/Ripple';
+import {DomHandler} from 'primevue/utils';
+import Ripple from 'primevue/ripple';
 
 export default {
     name: 'sub-menu',
+    emits: ['keydown-item', 'leaf-click'],
     props: {
         model: {
             type: Array,

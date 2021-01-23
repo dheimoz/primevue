@@ -75,11 +75,11 @@
 </template>
 
 <script>
-import ObjectUtils from '../utils/ObjectUtils';
-import FilterUtils from '../utils/FilterUtils';
-import DomHandler from '../utils/DomHandler';
-import TreeTableRow from './TreeTableRow';
-import Paginator from '../paginator/Paginator';
+import {ObjectUtils} from 'primevue/utils';
+import {FilterUtils} from 'primevue/utils';
+import {DomHandler} from 'primevue/utils';
+import TreeTableRow from './TreeTableRow.vue';
+import Paginator from 'primevue/paginator';
 
 export default {
     emits: ['node-expand', 'node-collapse', 'update:expandedKeys', 'update:selectionKeys', 'node-select', 'node-unselect', 
@@ -166,7 +166,7 @@ export default {
             default: false
         },
         sortField: {
-            type: String,
+            type: [String, Function],
             default: null
         },
         sortOrder: {
@@ -575,7 +575,7 @@ export default {
                     }
 
                     //global
-                    if (this.hasGlobalFilter && !globalMatch) {
+                    if (this.hasGlobalFilter() && !globalMatch) {
                         let copyNodeForGlobal = {...copyNode};
                         let filterValue = this.filters['global'];
                         let filterConstraint = FilterUtils['contains'];
@@ -590,7 +590,7 @@ export default {
                 }
 
                 let matches = localMatch;
-                if (this.hasGlobalFilter) {
+                if (this.hasGlobalFilter()) {
                     matches = localMatch && globalMatch;
                 }
 
@@ -646,7 +646,7 @@ export default {
         },
         createLazyLoadEvent(event) {
             let filterMatchModes;
-            if (this.hasFilters) {
+            if (this.hasFilters()) {
                 filterMatchModes = {};
                 this.columns.forEach(col => {
                     if (col.props?.field) {
@@ -777,6 +777,12 @@ export default {
             }
 
             return false;
+        },
+        hasFilters() {
+            return this.filters && Object.keys(this.filters).length > 0 && this.filters.constructor === Object;
+        },
+        hasGlobalFilter() {
+            return this.filters && Object.prototype.hasOwnProperty.call(this.filters, 'global');
         }
     },
     computed: {
@@ -816,7 +822,7 @@ export default {
                             data = this.sortMultiple(data);
                     }
 
-                    if (this.hasFilters) {
+                    if (this.hasFilters()) {
                         data = this.filter(data);
                     }
 
@@ -856,12 +862,6 @@ export default {
             }
 
             return hasFooter;
-        },
-        hasFilters() {
-            return this.filters && Object.keys(this.filters).length > 0 && this.filters.constructor === Object;
-        },
-        hasGlobalFilter() {
-            return this.filters && Object.prototype.hasOwnProperty.call(this.filters, 'global');
         },
         paginatorTop() {
             return this.paginator && (this.paginatorPosition !== 'bottom' || this.paginatorPosition === 'both');

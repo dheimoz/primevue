@@ -1,19 +1,6 @@
 import Vue, { VNode } from 'vue';
 
-export interface LocaleSettings {
-    firstDayOfWeek?: number;
-    dayNames: string[];
-    dayNamesShort: string[];
-    dayNamesMin: string[];
-    monthNames: string[];
-    monthNamesShort: string[];
-    today: string;
-    clear: string;
-    dateFormat: string;
-    weekHeader?: string;
-}
-
-export declare class Calendar extends Vue {
+declare class Calendar extends Vue {
     modelValue?: Date | Date[];
     selectionMode?: string;
     dateFormat?: string;
@@ -51,7 +38,6 @@ export declare class Calendar extends Vue {
     timeSeparator?: string;
     showWeek?: boolean;
     manualInput?: boolean;
-    locale?: LocaleSettings;
     appendTo?: string;
     $emit(eventName: 'show'): this;
     $emit(eventName: 'hide'): this;
@@ -66,3 +52,5 @@ export declare class Calendar extends Vue {
         footer: VNode[];
     };
 }
+
+export default Calendar;

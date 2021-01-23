@@ -1,5 +1,5 @@
 <template>
-    <transition name="p-sidebar" @enter="onEnter" @leave="onLeave">
+    <transition name="p-sidebar" @enter="onEnter" @leave="onLeave" appear>
         <div :class="containerClass" v-if="visible" ref="container" role="complementary" :aria-modal="modal">
             <div class="p-sidebar-content">
                 <button class="p-sidebar-close p-link" @click="hide" :aria-label="ariaCloseLabel" v-if="showCloseIcon" type="button" v-ripple>
@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import DomHandler from '../utils/DomHandler';
-import Ripple from '../ripple/Ripple';
+import {DomHandler} from 'primevue/utils';
+import Ripple from 'primevue/ripple';
 
 export default {
     emits: ['update:visible', 'show', 'hide'],
@@ -54,7 +54,7 @@ export default {
     mask: null,
     maskClickListener: null,
     beforeUnmount() {
-        this.unbindMaskClickListener();
+        this.destroyModal();
     },
     methods: {
         hide() {
@@ -104,10 +104,7 @@ export default {
             if (this.mask) {
                 DomHandler.addClass(this.mask, 'p-sidebar-mask-leave');
                 this.mask.addEventListener('transitionend', () => {
-                    this.unbindMaskClickListener();
-                    document.body.removeChild(this.mask);
-                    DomHandler.removeClass(document.body, 'p-overflow-hidden');
-                    this.mask = null;
+                    this.destroyModal();
                 });
             }
         },
@@ -123,6 +120,14 @@ export default {
             if (this.maskClickListener) {
                 this.mask.removeEventListener('click', this.maskClickListener);
                 this.maskClickListener = null;
+            }
+        },
+        destroyModal() {
+            if (this.mask) {
+                this.unbindMaskClickListener();
+                document.body.removeChild(this.mask);
+                DomHandler.removeClass(document.body, 'p-overflow-hidden');
+                this.mask = null;
             }
         }
     },

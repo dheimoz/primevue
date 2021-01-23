@@ -18,8 +18,8 @@
                     <div class="feature-card">
                         <img alt="components" src="../assets/images/home/vue-components.png" />
                         <div class="feature-card-detail">
-                            <div class="feature-name">60+ COMPONENTS</div>
-                            <p>The ultimate set of UI Components to assist you with 60+ impressive Vue Components.</p>
+                            <div class="feature-name">80+ COMPONENTS</div>
+                            <p>The ultimate set of UI Components to assist you with 80+ impressive Vue Components.</p>
                         </div>
                     </div>
                 </div>
@@ -215,7 +215,7 @@
                     </a>
                 </div>
                 <div class="p-col-12 p-md-6">
-                    <img alt="PRO" src="../assets/images/home/icon-pro.svg" />
+                    <img alt="PRO" src="../assets/images/home/asset-pro.png" />
                 </div>
             </div>
         </div>

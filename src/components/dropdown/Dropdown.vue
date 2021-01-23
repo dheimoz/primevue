@@ -40,10 +40,10 @@
 </template>
 
 <script>
-import ConnectedOverlayScrollHandler from '../utils/ConnectedOverlayScrollHandler';
-import ObjectUtils from '../utils/ObjectUtils';
-import DomHandler from '../utils/DomHandler';
-import Ripple from '../ripple/Ripple';
+import {ConnectedOverlayScrollHandler} from 'primevue/utils';
+import {ObjectUtils} from 'primevue/utils';
+import {DomHandler} from 'primevue/utils';
+import Ripple from 'primevue/ripple';
 
 export default {
     emits: ['update:modelValue', 'before-show', 'before-hide', 'show', 'hide', 'change', 'filter'],
@@ -102,11 +102,6 @@ export default {
             this.scrollHandler = null;
         }
         this.overlay = null;
-    },
-    updated() {
-        if (this.overlayVisible && this.filterValue) {
-            this.alignOverlay();
-        }
     },
     methods: {
         getOptionLabel(option) {
@@ -464,6 +459,9 @@ export default {
         },
         onFilterChange(event) {
             this.$emit('filter', {originalEvent: event, value: event.target.value});
+            if (this.overlayVisible) {
+                this.alignOverlay();
+            }
         },
         overlayRef(el) {
             this.overlay = el;
@@ -484,7 +482,7 @@ export default {
                     'p-dropdown-clearable': this.showClear && !this.disabled,
                     'p-focus': this.focused,
                     'p-inputwrapper-filled': this.modelValue,
-                    'p-inputwrapper-focus': this.focused
+                    'p-inputwrapper-focus': this.focused || this.overlayVisible
                 }
             ];
         },

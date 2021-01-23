@@ -38,6 +38,14 @@ data() {
 
 </code></pre>
 
+                <h5>Chips Display</h5>
+                <p>A comma separated list is used by default to display selected items whereas alternative chip mode is provided using the <i>display</i> property to visualize the items as tokens.</p>
+<pre v-code>
+<code>
+&lt;MultiSelect v-model="selectedCars" :options="cars" optionLabel="brand" placeholder="Select Brands" display="chip"/&gt;
+
+</code></pre>
+
 				<h5>Custom Content</h5>
 				<p>Label of an option is used as the display text of an item by default, for custom content support define an <i>option</i> template that gets the option instance as a parameter.</p>
 				<p>In addition the <i>value</i> template can be used to customize the selected values display instead of the default comma separated list.</p>
@@ -186,6 +194,12 @@ data() {
                                 <td>No results found</td>
                                 <td>Text to display when filtering does not return any results.</td>
                             </tr>
+                            <tr>
+                                <td>display</td>
+                                <td>string</td>
+                                <td>comma</td>
+                                <td>Defines how the selected items are displayed, valid values are "comma" and "chip".</td>
+                            </tr>
 						</tbody>
 					</table>
 				</div>
@@ -314,13 +328,20 @@ data() {
 			</TabPanel>
 
 			<TabPanel header="Source">
-				<a href="https://github.com/primefaces/primevue/tree/master/src/views/multiselect" class="btn-viewsource" target="_blank" rel="noopener noreferrer">
-					<span>View on GitHub</span>
-				</a>
+                <div class="p-d-flex p-jc-between">
+                    <a href="https://github.com/primefaces/primevue/tree/master/src/views/multiselect" class="btn-viewsource" target="_blank" rel="noopener noreferrer">                    		
+                        <span>View on GitHub</span>
+                    </a>
+                    <LiveEditor name="MultiSelectDemo" :sources="sources"/>
+                </div>
+
 <pre v-code>
 <code><template v-pre>
 &lt;h5&gt;Basic&lt;/h5&gt;
-&lt;MultiSelect v-model="selectedCities" :options="cities" optionLabel="name" placeholder="Select a City" /&gt;
+&lt;MultiSelect v-model="selectedCities1" :options="cities" optionLabel="name" placeholder="Select a City" /&gt;
+
+&lt;h5&gt;Chips&lt;/h5&gt;
+&lt;MultiSelect v-model="selectedCities2" :options="cities" optionLabel="name" placeholder="Select a City" display="chip"/&gt;
 
 &lt;h5&gt;Advanced with Templating and Filtering&lt;/h5&gt;
 &lt;MultiSelect v-model="selectedCountries" :options="countries" optionLabel="name" placeholder="Select Countries" :filter="true" class="multiselect-custom"&gt;
@@ -348,7 +369,8 @@ data() {
 export default {
     data() {
         return {
-            selectedCities: null,
+            selectedCities1: null,
+            selectedCities2: null,
             selectedCountries: null,
             cities: [
                 {name: 'New York', code: 'NY'},
@@ -406,3 +428,108 @@ export default {
 		</TabView>
 	</div>
 </template>
+
+<script>
+import LiveEditor from '../liveeditor/LiveEditor';
+export default {
+    data() {
+        return {
+            sources: {
+                'template': {
+                    content: `<template>
+    <div class="layout-content">
+        <div class="content-section implementation">
+            <div class="card">
+                <h5>Basic</h5>
+                <MultiSelect v-model="selectedCities1" :options="cities" optionLabel="name" placeholder="Select a City" />
+
+                <h5>Chips</h5>
+                <MultiSelect v-model="selectedCities2" :options="cities" optionLabel="name" placeholder="Select a City" display="chip" />
+
+                <h5>Advanced with Templating and Filtering</h5>
+                <MultiSelect v-model="selectedCountries" :options="countries" optionLabel="name" placeholder="Select Countries" :filter="true" class="multiselect-custom">
+                    <template #value="slotProps">
+                        <div class="country-item country-item-value" v-for="option of slotProps.value" :key="option.code">
+                            <img src="https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png" />
+                            <div>{{option.name}}</div>
+                        </div>
+                        <template v-if="!slotProps.value || slotProps.value.length === 0">
+                            Select Countries
+                        </template>
+                    </template>
+                    <template #option="slotProps">
+                        <div class="country-item">
+                            <img src="https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png" />
+                            <div>{{slotProps.option.name}}</div>
+                        </div>
+                    </template>
+                </MultiSelect>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+            selectedCities1: null,
+            selectedCities2: null,
+            selectedCountries: null,
+            cities: [
+                {name: 'New York', code: 'NY'},
+                {name: 'Rome', code: 'RM'},
+                {name: 'London', code: 'LDN'},
+                {name: 'Istanbul', code: 'IST'},
+                {name: 'Paris', code: 'PRS'}
+            ],
+            countries: [
+                {name: 'Australia', code: 'AU'},
+                {name: 'Brazil', code: 'BR'},
+                {name: 'China', code: 'CN'},
+                {name: 'Egypt', code: 'EG'},
+                {name: 'France', code: 'FR'},
+                {name: 'Germany', code: 'DE'},
+                {name: 'India', code: 'IN'},
+                {name: 'Japan', code: 'JP'},
+                {name: 'Spain', code: 'ES'},
+                {name: 'United States', code: 'US'}
+            ]
+        }
+    }
+}`,
+                    style: `<style lang="scss" scoped>
+.p-multiselect {
+    min-width: 15rem;
+}
+
+::v-deep(.multiselect-custom) {
+    .p-multiselect-label:not(.p-placeholder) {
+        padding-top: .25rem;
+        padding-bottom: .25rem;
+    }
+
+    .country-item-value {
+        padding: .25rem .5rem;
+        border-radius: 3px;
+        display: inline-flex;
+        margin-right: .5rem;
+        background-color: var(--primary-color);
+        color: var(--primary-color-text);
+    }
+
+    img {
+        width: 17px;
+        margin-right: 0.5rem;
+    }
+}
+</style>`
+                }
+            }
+        }
+    },
+    components: {
+        LiveEditor
+    }
+}
+</script>

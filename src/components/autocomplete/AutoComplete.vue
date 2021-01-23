@@ -29,16 +29,16 @@
 </template>
 
 <script>
-import ConnectedOverlayScrollHandler from '../utils/ConnectedOverlayScrollHandler';
-import UniqueComponentId from '../utils/UniqueComponentId';
-import ObjectUtils from '../utils/ObjectUtils';
-import DomHandler from '../utils/DomHandler';
-import Button from '../button/Button';
-import Ripple from '../ripple/Ripple';
+import {ConnectedOverlayScrollHandler} from 'primevue/utils';
+import {UniqueComponentId} from 'primevue/utils';
+import {ObjectUtils} from 'primevue/utils';
+import {DomHandler} from 'primevue/utils';
+import Button from 'primevue/button';
+import Ripple from 'primevue/ripple';
 
 export default {
     inheritAttrs: false,
-    emits: ['update:modelValue', 'item-select', 'item-select', 'dropdown-click', 'clear', 'complete'],
+    emits: ['update:modelValue', 'item-select', 'item-unselect', 'dropdown-click', 'clear', 'complete'],
     props: {
         modelValue: null,
         suggestions: {
@@ -46,7 +46,7 @@ export default {
             default: null
         },
         field: {
-            type: String,
+            type: [String,Function],
             default: null
         },
         scrollHeight: {
@@ -116,6 +116,11 @@ export default {
             this.scrollHandler = null;
         }
         this.overlay = null;
+    },
+    updated() {
+        if (this.overlayVisible) {
+            this.alignOverlay();
+        }
     },
     methods: {
         onOverlayEnter() {
@@ -325,7 +330,7 @@ export default {
                             }
                         }
                         else {
-                            DomHandler.addClass(this.overlay.firstChild.firstChild, 'p-highlight');
+                            DomHandler.addClass(this.overlay.firstChild.firstElementChild, 'p-highlight');
                         }
 
                         event.preventDefault();
@@ -452,7 +457,7 @@ export default {
         },
         inputValue() {
             if (this.modelValue) {
-                if (this.field) {
+                if (this.field && typeof this.modelValue === 'object') {
                     const resolvedFieldData = ObjectUtils.resolveFieldData(this.modelValue, this.field);
                     return resolvedFieldData != null ? resolvedFieldData : this.modelValue;
                 }
@@ -534,6 +539,7 @@ export default {
     overflow: hidden;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .p-autocomplete-token {

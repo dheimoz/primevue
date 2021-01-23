@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import ObjectUtils from '../utils/ObjectUtils';
-import Ripple from '../ripple/Ripple';
+import {ObjectUtils} from 'primevue/utils';
+import Ripple from 'primevue/ripple';
 
 export default {
     emits: ['update:modelValue', 'focus', 'blur'],
@@ -57,7 +57,7 @@ export default {
                     newValue = this.modelValue ? [...this.modelValue, optionValue]: [optionValue];
             }
             else {
-                newValue = selected ? null : optionValue;
+                newValue = optionValue;
             }
 
             this.$emit('update:modelValue', newValue);

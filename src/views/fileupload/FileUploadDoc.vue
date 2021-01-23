@@ -194,27 +194,39 @@ myUploader(event) {
                             <tr>
                                 <td>chooseLabel</td>
                                 <td>string</td>
-                                <td>Choose</td>
-                                <td>Label of the choose button.</td>
+                                <td>null</td>
+                                <td>Label of the choose button. Defaults to PrimeVue <router-link to="/locale">Locale</router-link> configuration.</td>
                             </tr>
                             <tr>
                                 <td>uploadLabel</td>
                                 <td>string</td>
                                 <td>Upload</td>
-                                <td>Label of the upload button.</td>
+                                <td>Label of the upload button. Defaults to PrimeVue <router-link to="/locale">Locale</router-link> configuration.</td>
                             </tr>
                             <tr>
                                 <td>cancelLabel</td>
                                 <td>string</td>
                                 <td>Cancel</td>
-                                <td>Label of the cancel button.</td>
+                                <td>Label of the cancel button. Defaults to PrimeVue <router-link to="/locale">Locale</router-link> configuration.</td>
                             </tr>
                             <tr>
                                 <td>customUpload</td>
                                 <td>boolean</td>
                                 <td>false</td>
-                                <td>Whether to use the default upload or a manual implementation defined in uploadHandler callback.</td>
+                                <td>Whether to use the default upload or a manual implementation defined in uploadHandler callback. Defaults to PrimeVue <router-link to="/locale">Locale</router-link> configuration.</td>
                             </tr>
+							<tr>
+								<td>showUploadButton</td>
+								<td>boolean</td>
+								<td>true</td>
+								<td>Whether to show the upload button.</td>
+							</tr>
+							<tr>
+								<td>showCancelButton</td>
+								<td>boolean</td>
+								<td>true</td>
+								<td>Whether to show the cancel button.</td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
@@ -314,9 +326,12 @@ myUploader(event) {
 			</TabPanel>
 
 			<TabPanel header="Source">
-				<a href="https://github.com/primefaces/primevue/tree/master/src/views/fileupload" class="btn-viewsource" target="_blank" rel="noopener noreferrer">
-					<span>View on GitHub</span>
-				</a>
+				<div class="p-d-flex p-jc-between">
+					<a href="https://github.com/primefaces/primevue/tree/master/src/views/fileupload" class="btn-viewsource" target="_blank" rel="noopener noreferrer">
+						<span>View on GitHub</span>
+					</a>
+					<LiveEditor name="FileUploadDemo" :sources="sources" :toastService="true" />
+				</div>
 <pre v-code>
 <code><template v-pre>
 &lt;h3&gt;Advanced&lt;/h3&gt;
@@ -349,3 +364,50 @@ export default {
 		</TabView>
 	</div>
 </template>
+
+<script>
+import LiveEditor from '../liveeditor/LiveEditor';
+export default {
+	data() {
+		return {
+			sources: {
+				'template': {
+					content: `<template>
+	<div class="layout-content">
+		<Toast />
+        <div class="content-section implementation">
+            <div class="card">
+                <h5>Advanced</h5>
+                <FileUpload name="demo[]" url="./upload.php" @upload="onUpload" :multiple="true" accept="image/*" :maxFileSize="1000000">
+                    <template #empty>
+                        <p>Drag and drop files to here to upload.</p>
+                    </template>
+                </FileUpload>
+
+                <h5>Basic</h5>
+                <FileUpload mode="basic" name="demo[]" url="./upload.php" accept="image/*" :maxFileSize="1000000" @upload="onUpload" />
+
+                <h5>Basic with Auto</h5>
+                <FileUpload mode="basic" name="demo[]" url="./upload.php" accept="image/*" :maxFileSize="1000000" @upload="onUpload" :auto="true" chooseLabel="Browse" />
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    methods: {
+        onUpload() {
+            this.$toast.add({severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000});
+        }
+    }
+}`
+				}
+			}
+		}
+	},
+	components: {
+		LiveEditor
+	}
+}
+</script>

@@ -144,6 +144,26 @@ import InlineMessage from 'primevue/inlinemessage';
 					</table>
 				</div>
 
+                <h5>Events of Message</h5>
+				<div class="doc-tablewrapper">
+					<table class="doc-table">
+						<thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Parameters</th>
+                                <th>Description</th>
+                            </tr>
+						</thead>
+						<tbody>
+                            <tr>
+                                <td>close</td>
+                                <td>event: Browser event</td>
+                                <td>Callback to invoke when a message is closed.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
 				<h5>Styling</h5>
 				<p>Following is the list of structural style classes, for theming classes visit <router-link to="/theming">theming</router-link> page.</p>
 
@@ -240,9 +260,12 @@ import InlineMessage from 'primevue/inlinemessage';
 			</TabPanel>
 
 			<TabPanel header="Source">
-				<a href="https://github.com/primefaces/primevue/tree/master/src/views/message" class="btn-viewsource" target="_blank" rel="noopener noreferrer">
-					<span>View on GitHub</span>
-				</a>
+                <div class="p-d-flex p-jc-between">
+                    <a href="https://github.com/primefaces/primevue/tree/master/src/views/message" class="btn-viewsource" target="_blank" rel="noopener noreferrer">
+                        <span>View on GitHub</span>
+                    </a>
+                    <LiveEditor name="MessageDemo" :sources="sources" :components="['InlineMessage', 'Button']" />
+                </div>
 <pre v-code>
 <code><template v-pre>
 &lt;h5&gt;Severities&lt;/h5&gt;
@@ -254,11 +277,28 @@ import InlineMessage from 'primevue/inlinemessage';
 &lt;h5&gt;Dynamic&lt;/h5&gt;
 &lt;Button label="Show" @click="addMessages()" /&gt;
 &lt;transition-group name="p-message" tag="div"&gt;
-    &lt;Message v-for="msg of messages" :severity="msg.severity" :key="msg.content"&gt;{{msg.content}}&lt;/Message&gt;
+    &lt;Message v-for="msg of messages" :severity="msg.severity" :key="msg.id"&gt;{{msg.content}}&lt;/Message&gt;
 &lt;/transition-group&gt;
 
 &lt;h5&gt;Auto Dismiss&lt;/h5&gt;
 &lt;Message severity="warn" :life="3000" :sticky="false"&gt;This message will hide in 3 seconds.&lt;/Message&gt;
+
+&lt;h5&gt;Inline Messages&lt;/h5&gt;
+&lt;p&gt;Message component is used to display inline messages mostly within forms.&lt;/p&gt;
+&lt;div class="p-grid"&gt;
+    &lt;div class="p-col-12 p-md-3"&gt;
+        &lt;InlineMessage severity="info"&gt;Message Content&lt;/InlineMessage&gt;
+    &lt;/div&gt;
+    &lt;div class="p-col-12 p-md-3"&gt;
+        &lt;InlineMessage severity="success"&gt;Message Content&lt;/InlineMessage&gt;
+    &lt;/div&gt;
+    &lt;div class="p-col-12 p-md-3"&gt;
+        &lt;InlineMessage severity="warn"&gt;Message Content&lt;/InlineMessage&gt;
+    &lt;/div&gt;
+    &lt;div class="p-col-12 p-md-3"&gt;
+        &lt;InlineMessage severity="error"&gt;Message Content&lt;/InlineMessage&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
 
 &lt;h5&gt;Validation Message&lt;/h5&gt;
 &lt;div class="p-formgroup-inline" style="margin-bottom:.5rem"&gt;
@@ -286,9 +326,9 @@ export default {
 	methods: {
 		addMessages() {
 			this.messages = [
-				{severity: 'info', content: 'Dynamic Info Message'},
-				{severity: 'success', content: 'Dynamic Success Message'},
-				{severity: 'warn', content: 'Dynamic Warning Message'}
+				{severity: 'info', content: 'Dynamic Info Message', id: this.count++},
+				{severity: 'success', content: 'Dynamic Success Message', id: this.count++},
+				{severity: 'warn', content: 'Dynamic Warning Message', id: this.count++}
 			]
 		}
 	}
@@ -311,3 +351,99 @@ button.p-button {
 		</TabView>
 	</div>
 </template>
+
+<script>
+import LiveEditor from '../liveeditor/LiveEditor';
+export default {
+    data() {
+        return {
+            sources: {
+                'template': {
+                    content: `<template>
+    <div class="layout-content">
+        <div class="content-section implementation">
+            <div class="card">
+                <h5>Severities</h5>
+                <Message severity="success">Success Message Content</Message>
+                <Message severity="info">Info Message Content</Message>
+                <Message severity="warn">Warning Message Content</Message>
+                <Message severity="error">Error Message Content</Message>
+
+                <h5>Dynamic</h5>
+                <Button label="Show" @click="addMessages()" />
+                <transition-group name="p-message" tag="div">
+                    <Message v-for="msg of messages" :severity="msg.severity" :key="msg.id">{{msg.content}}</Message>
+                </transition-group>
+
+                <h5>Inline Messages</h5>
+                <p>Message component is used to display inline messages mostly within forms.</p>
+                <div class="p-grid">
+                    <div class="p-col-12 p-md-3">
+                        <InlineMessage severity="info">Message Content</InlineMessage>
+                    </div>
+                    <div class="p-col-12 p-md-3">
+                        <InlineMessage severity="success">Message Content</InlineMessage>
+                    </div>
+                    <div class="p-col-12 p-md-3">
+                        <InlineMessage severity="warn">Message Content</InlineMessage>
+                    </div>
+                    <div class="p-col-12 p-md-3">
+                        <InlineMessage severity="error">Message Content</InlineMessage>
+                    </div>
+                </div>
+
+                <h5>Auto Dismiss</h5>
+                <Message severity="warn" :life="3000" :sticky="false">This message will hide in 3 seconds.</Message>
+
+                <h5>Validation Message</h5>
+                <div class="p-formgroup-inline" style="margin-bottom:.5rem">
+                    <label for="username" class="p-sr-only">Username</label>
+                    <InputText id="username" placeholder="Username" class="p-invalid" />
+                    <InlineMessage>Username is required</InlineMessage>
+                </div>
+                <div class="p-formgroup-inline">
+                    <label for="email" class="p-sr-only">email</label>
+                    <InputText id="email" placeholder="Email" class="p-invalid" />
+                    <InlineMessage />
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+            messages: [],
+            count: 0
+        }
+    },
+    methods: {
+        addMessages() {
+            this.messages = [
+                {severity: 'info', content: 'Dynamic Info Message', id: this.count++},
+                {severity: 'success', content: 'Dynamic Success Message', id: this.count++},
+                {severity: 'warn', content: 'Dynamic Warning Message', id: this.count++}
+            ]
+        }
+    }
+}`,
+                    style: `<style scoped>
+button.p-button {
+    margin-right: .5rem;
+}
+
+.p-inputtext {
+    margin-right: .5rem;
+}
+</style>`
+                }
+            }
+        }
+    },
+    components: {
+        LiveEditor
+    }
+}
+</script>

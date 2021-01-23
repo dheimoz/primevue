@@ -51,7 +51,7 @@ export default {
 </code></pre>
 
                 <h5>DateFormat</h5>
-                <p>Default date format is mm/dd/yy, to customize this use <i>dateFormat</i> property or define it at locale settings. Note that standalone property overrides the value in locale settings.</p>
+                <p>Default date format is mm/dd/yy, to customize this use <i>dateFormat</i> property or define it at <router-link to="/locale">PrimeVue Locale</router-link> globally. Note that standalone property overrides the value in locale settings.</p>
 
 <pre v-code>
 <code>
@@ -124,36 +124,8 @@ export default {
 
 </code></pre>
 
-                <h5>Localization</h5>
-                <p>Localization for different languages and formats is defined by binding the locale settings object to the <i>locale</i> property. Following is the default values for English.</p>
-<pre v-code>
-<code>
-&lt;Calendar v-model="value" :locale="en" /&gt;
-
-</code></pre>
-
-<pre v-code.script>
-<code>
-export default {
-    data() {
-        return {
-            en: {
-                firstDayOfWeek: 0,
-                dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                dayNamesShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-                dayNamesMin: ["Su","Mo","Tu","We","Th","Fr","Sa"],
-                monthNames: [ "January","February","March","April","May","June","July","August","September","October","November","December" ],
-                monthNamesShort: [ "Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ],
-                today: 'Today',
-                clear: 'Clear',
-                dateFormat: 'mm/dd/yy',
-                weekHeader: 'Wk'
-            }
-        }
-    }
-}
-
-</code></pre>
+                <h5>Locale</h5>
+                <p>Locale for different languages and formats is defined globally, refer to the <router-link to="/locale">PrimeVue Locale</router-link> configuration for more information.</p>
 
             <h5>Custom Content</h5>
             <p>Calendar UI accepts custom content using header and footer templates.</p>
@@ -234,8 +206,8 @@ export default {
                             <tr>
                                 <td>dateFormat</td>
                                 <td>string</td>
-                                <td>mm/dd/yy</td>
-                                <td>Format of the date.</td>
+                                <td>null</td>
+                                <td>Format of the date. Defaults to PrimeVue <router-link to="/locale">Locale</router-link> configuration.</td>
                             </tr>
                             <tr>
                                 <td>inline</td>
@@ -574,9 +546,12 @@ export default {
 			</TabPanel>
 
             <TabPanel header="Source">
-				<a href="https://github.com/primefaces/primevue/tree/master/src/views/calendar" class="btn-viewsource" target="_blank" rel="noopener noreferrer">
-					<span>View on GitHub</span>
-				</a>
+                <div class="p-d-flex p-jc-between">
+                    <a href="https://github.com/primefaces/primevue/tree/master/src/views/calendar" class="btn-viewsource" target="_blank" rel="noopener noreferrer">
+                        <span>View on GitHub</span>
+                    </a>
+                    <LiveEditor name="CalendarDemo" :sources="sources" />
+                </div>
 <pre v-code>
 <code><template v-pre>
 &lt;h5&gt;Popup&lt;/h5&gt;
@@ -586,12 +561,12 @@ export default {
         &lt;Calendar id="basic" v-model="date1" /&gt;
     &lt;/div&gt;
     &lt;div class="p-field p-col-12 p-md-4"&gt;
-        &lt;label for="icon"&gt;Icon&lt;/label&gt;
-        &lt;Calendar id="icon" v-model="date3" :showIcon="true" /&gt;
+        &lt;label for="dateformat"&gt;Spanish&lt;/label&gt;
+        &lt;Calendar id="dateformat" v-model="date2" dateFormat="mm-dd-yy" /&gt;
     &lt;/div&gt;
     &lt;div class="p-field p-col-12 p-md-4"&gt;
-        &lt;label for="spanish"&gt;Spanish&lt;/label&gt;
-        &lt;Calendar id="spanish" v-model="date2" :locale="es" dateFormat="dd/mm/yy" /&gt;
+        &lt;label for="icon"&gt;Icon&lt;/label&gt;
+        &lt;Calendar id="icon" v-model="date3" :showIcon="true" /&gt;
     &lt;/div&gt;
     &lt;div class="p-field p-col-12 p-md-4"&gt;
         &lt;label for="minmax"&gt;MinMax&lt;/label&gt;
@@ -637,7 +612,7 @@ export default {
         &lt;label for="datetemplate"&gt;Date Template&lt;/label&gt;
         &lt;Calendar id="datetemplate" v-model="date12"&gt;
            &lt;template #date="slotProps"&gt;
-                &lt;strong v-if="slotProps.date.day &gt; 10 && slotProps.date.day &lt; 15" class="special-day"&gt;{{slotProps.date.day}}&lt;/strong&gt;
+                &lt;strong v-if="slotProps.date.day &gt; 10 &amp;&amp; slotProps.date.day &lt; 15" class="special-day"&gt;{{slotProps.date.day}}&lt;/strong&gt;
                 &lt;template v-else&gt;&#123;&#123;slotProps.date.day&#125;&#125;}&lt;/template&gt;
             &lt;/template&gt;
         &lt;/Calendar&gt;
@@ -693,17 +668,6 @@ export default {
             date14: null,
             dates1: null,
             dates2: null,
-            es: {
-                firstDayOfWeek: 1,
-                dayNames: [ "Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado" ],
-                dayNamesShort: [ "Dom","Lun","Mar","Mié","Jue","Vie","Sáb" ],
-                dayNamesMin: [ "D","L","M","X","J","V","S" ],
-                monthNames: [ "Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre" ],
-                monthNamesShort: [ "Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic" ],
-                today: 'Hoy',
-                clear: 'Borrar',
-                weekHeader: 'Sm'
-            },
             minDate: null,
             maxDate: null,
             invalidDates: null
@@ -725,3 +689,150 @@ export default {
 		</TabView>
 	</div>
 </template>
+
+<script>
+import LiveEditor from '../liveeditor/LiveEditor';
+export default {
+    data() {
+        return {
+            sources: {
+                'template': {
+                    content: `<template>
+    <div class="layout-content">
+        <div class="content-section implementation">
+            <div class="card">
+                <h5>Popup</h5>
+                <div class="p-fluid p-grid p-formgrid">
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="basic">Basic</label>
+                        <Calendar id="basic" v-model="date1" />
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="dateformat">DateFormat</label>
+                        <Calendar id="dateformat" v-model="date2"  dateFormat="mm-dd-yy" />
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="icon">Icon</label>
+                        <Calendar id="icon" v-model="date3" :showIcon="true" />
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="minmax">MinMax</label>
+                        <Calendar id="minmax" v-model="date4" :minDate="minDate" :maxDate="maxDate" :manualInput="false" />
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="disableddays">Disabled Days</label>
+                        <Calendar id="disableddays" v-model="date5" :disabledDates="invalidDates" :disabledDays="[0,6]" :manualInput="false" />
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="navigators">Navigators</label>
+                        <Calendar id="navigators" v-model="date6" :monthNavigator="true" :yearNavigator="true" yearRange="2000:2030" />
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="multiple">Multiple</label>
+                        <Calendar id="multiple" v-model="dates1" selectionMode="multiple" :manualInput="false" />
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="range">Range</label>
+                        <Calendar id="range" v-model="dates2" selectionMode="range" :manualInput="false" />
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="buttonbar">Button Bar</label>
+                        <Calendar id="buttonbar" v-model="date7" :showButtonBar="true" />
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="time24">Time / 24h</label>
+                        <Calendar id="time24" v-model="date8" :showTime="true" :showSeconds="true" />
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="time12">Time / 12h</label>
+                        <Calendar id="time12" v-model="date9" :timeOnly="true" hourFormat="12" />
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="monthpicker">Month Picker</label>
+                        <Calendar id="monthpicker" v-model="date10" view="month" dateFormat="mm/yy" :yearNavigator="true" yearRange="2000:2030" />
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="multiplemonths">Multiple Months</label>
+                        <Calendar id="multiplemonths" v-model="date11" :numberOfMonths="3" />
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="datetemplate">Date Template</label>
+                        <Calendar id="datetemplate" v-model="date12">
+                            <template #date="slotProps">
+                                <strong v-if="slotProps.date.day > 10 && slotProps.date.day < 15" class="special-day">{{slotProps.date.day}}</strong>
+                                <template v-else>{{slotProps.date.day}}</template>
+                            </template>
+                        </Calendar>
+                    </div>
+                    <div class="p-field p-col-12 p-md-4">
+                        <label for="touchUI">TouchUI</label>
+                        <Calendar id="touchUI" v-model="date13" :touchUI="true" />
+                    </div>
+                </div>
+
+                <h5>Inline</h5>
+                <Calendar v-model="date14" :inline="true" :showWeek="true" />
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    created() {
+        let today = new Date();
+        let month = today.getMonth();
+        let year = today.getFullYear();
+        let prevMonth = (month === 0) ? 11 : month -1;
+        let prevYear = (prevMonth === 11) ? year - 1 : year;
+        let nextMonth = (month === 11) ? 0 : month + 1;
+        let nextYear = (nextMonth === 0) ? year + 1 : year;
+        this.minDate = new Date();
+        this.minDate.setMonth(prevMonth);
+        this.minDate.setFullYear(prevYear);
+        this.maxDate = new Date();
+        this.maxDate.setMonth(nextMonth);
+        this.maxDate.setFullYear(nextYear);
+
+        let invalidDate = new Date();
+        invalidDate.setDate(today.getDate() - 1);
+        this.invalidDates = [today,invalidDate];
+    },
+    data() {
+        return {
+            date1: null,
+            date2: null,
+            date3: null,
+            date4: null,
+            date5: null,
+            date6: null,
+            date7: null,
+            date8: null,
+            date9: null,
+            date10: null,
+            date11: null,
+            date12: null,
+            date13: null,
+            date14: null,
+            dates1: null,
+            dates2: null,
+            minDate: null,
+            maxDate: null,
+            invalidDates: null
+        }
+    }
+}`,
+                    style: `<style scoped>
+.special-day {
+    text-decoration: line-through;
+}
+</style>`
+                }
+            }
+        }
+    },
+    components: {
+        LiveEditor
+    }
+}
+</script>

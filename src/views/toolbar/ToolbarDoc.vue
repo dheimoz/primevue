@@ -14,14 +14,14 @@ import Toolbar from 'primevue/toolbar';
 <pre v-code>
 <code>
 &lt;Toolbar&gt;
-    &lt;template slot="left"&gt;
+    &lt;template #left&gt;
         &lt;Button label="New" icon="pi pi-plus" class="p-mr-2" /&gt;
         &lt;Button label="Upload" icon="pi pi-upload" class="p-button-success" /&gt;
         &lt;i class="pi pi-bars p-toolbar-separator p-mr-2" /&gt;
         &lt;SplitButton label="Save" icon="pi pi-check" :model="items" class="p-button-warning"&gt;&lt;/SplitButton&gt;
     &lt;/template&gt;
 
-    &lt;template slot="right"&gt;
+    &lt;template #right&gt;
         &lt;Button icon="pi pi-search" class="p-mr-2" /&gt;
         &lt;Button icon="pi pi-calendar" class="p-button-success p-mr-2" /&gt;
         &lt;Button icon="pi pi-times" class="p-button-danger" /&gt;
@@ -62,20 +62,23 @@ import Toolbar from 'primevue/toolbar';
 			</TabPanel>
 
 			<TabPanel header="Source">
-				<a href="https://github.com/primefaces/primevue/tree/master/src/views/toolbar" class="btn-viewsource" target="_blank" rel="noopener noreferrer">
-					<span>View on GitHub</span>
-				</a>
+                <div class="p-d-flex p-jc-between">
+                    <a href="https://github.com/primefaces/primevue/tree/master/src/views/toolbar" class="btn-viewsource" target="_blank" rel="noopener noreferrer">
+                        <span>View on GitHub</span>
+                    </a>
+                    <LiveEditor name="ToolbarDemo" :sources="sources" :components="['Button', 'SplitButton']"/>
+                </div>
 <pre v-code>
 <code><template v-pre>
 &lt;Toolbar&gt;
-    &lt;template slot="left"&gt;
+    &lt;template #left&gt;
         &lt;Button label="New" icon="pi pi-plus" class="p-mr-2" /&gt;
         &lt;Button label="Upload" icon="pi pi-upload" class="p-button-success" /&gt;
         &lt;i class="pi pi-bars p-toolbar-separator p-mr-2" /&gt;
         &lt;SplitButton label="Save" icon="pi pi-check" :model="items" class="p-button-warning"&gt;&lt;/SplitButton&gt;
     &lt;/template&gt;
 
-    &lt;template slot="right"&gt;
+    &lt;template #right&gt;
         &lt;Button icon="pi pi-search" class="p-mr-2" /&gt;
         &lt;Button icon="pi pi-calendar" class="p-button-success p-mr-2" /&gt;
         &lt;Button icon="pi pi-times" class="p-button-danger" /&gt;
@@ -121,3 +124,76 @@ export default {
 		</TabView>
 	</div>
 </template>
+
+<script>
+import LiveEditor from '../liveeditor/LiveEditor';
+export default {
+    data() {
+        return {
+            sources: {
+                'template': {
+                    content: `<template>
+    <div class="layout-content">
+        <div class="content-section implementation">
+            <Toolbar>
+                <template #left>
+                    <Button label="New" icon="pi pi-plus" class="p-mr-2" />
+                    <Button label="Upload" icon="pi pi-upload" class="p-button-success" />
+                    <i class="pi pi-bars p-toolbar-separator p-mr-2" />
+                    <SplitButton label="Save" icon="pi pi-check" :model="items" class="p-button-warning"></SplitButton>
+                </template>
+
+                <template #right>
+                    <Button icon="pi pi-search" class="p-mr-2" />
+                    <Button icon="pi pi-calendar" class="p-button-success p-mr-2" />
+                    <Button icon="pi pi-times" class="p-button-danger" />
+                </template>
+            </Toolbar>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+            items: [
+                {
+                    label: 'Update',
+                    icon: 'pi pi-refresh'
+                },
+                {
+                    label: 'Delete',
+                    icon: 'pi pi-times'
+                },
+                {
+                    label: 'Vue Website',
+                    icon: 'pi pi-external-link',
+                    command: () => {
+                        window.location.href = 'https://vuejs.org/'
+                    }
+                },
+                {   label: 'Upload',
+                    icon: 'pi pi-upload',
+                    command: () => {
+                        window.location.hash = "/fileupload"
+                    }
+                }
+            ]
+        }
+    }
+}`,
+                    style: `<style>
+.p-button {
+  margin-bottom: 0.5rem;
+}
+</style>`
+                }
+            }
+        }
+    },
+    components: {
+        LiveEditor
+    }
+}
+</script>

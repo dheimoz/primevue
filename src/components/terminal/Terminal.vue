@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import TerminalService from './TerminalService';
+import TerminalService from 'primevue/terminalservice';
 
 export default {
     props: {

@@ -130,10 +130,10 @@
 </template>
 
 <script>
-import ObjectUtils from '../utils/ObjectUtils';
-import FilterUtils from '../utils/FilterUtils';
-import DomHandler from '../utils/DomHandler';
-import Paginator from '../paginator/Paginator';
+import {ObjectUtils} from 'primevue/utils';
+import {FilterUtils} from 'primevue/utils';
+import {DomHandler} from 'primevue/utils';
+import Paginator from 'primevue/paginator';
 import ScrollableView from './ScrollableView.vue';
 import TableHeader from './TableHeader.vue';
 import TableBody from './TableBody.vue';
@@ -143,7 +143,7 @@ export default {
     emits: ['update:first', 'update:rows', 'page', 'update:sortField', 'update:sortOrder', 'update:multiSortMeta', 'sort', 'filter', 'row-click',
         'update:selection', 'row-select', 'row-unselect', 'update:contextMenuSelection', 'row-contextmenu', 'row-unselect-all', 'row-select-all',
         'column-resize-end', 'column-reorder', 'row-reorder', 'update:expandedRows', 'row-collapse', 'row-expand',
-        'update:expandedRowGroups', 'rowgroup-collapse', 'rowgroup-expand', 'update:filters', 'virtual-scroll',
+        'update:expandedRowGroups', 'rowgroup-collapse', 'rowgroup-expand', 'update:filters', 'virtual-scroll', 'state-restore', 'state-save',
         'cell-edit-init', 'cell-edit-complete', 'cell-edit-cancel', 'update:editingRows', 'row-edit-init', 'row-edit-save', 'row-edit-cancel'],
     props: {
         value: {
@@ -207,7 +207,7 @@ export default {
             default: 'pi pi-spinner'
         },
         sortField: {
-            type: String,
+            type: [String, Function],
             default: null
         },
         sortOrder: {
@@ -607,13 +607,13 @@ export default {
                         }
                     }
 
-                    if (!col.props?.excludeGlobalFilter && this.hasGlobalFilter && !globalMatch) {
+                    if (!col.props?.excludeGlobalFilter && this.hasGlobalFilter() && !globalMatch) {
                         globalMatch = FilterUtils.contains(ObjectUtils.resolveFieldData(data[i], columnField), this.filters['global'], this.filterLocale);
                     }
                 }
 
                 let matches = localMatch;
-                if (this.hasGlobalFilter) {
+                if (this.hasGlobalFilter()) {
                     matches = localMatch && globalMatch;
                 }
 
@@ -1459,7 +1459,7 @@ export default {
                 state.multiSortMeta = this.d_multiSortMeta;
             }
 
-            if (this.hasFilters) {
+            if (this.hasFilters()) {
                 state.filters = this.filters;
             }
 
@@ -1488,6 +1488,8 @@ export default {
             if (Object.keys(state).length) {
                 storage.setItem(this.stateKey, JSON.stringify(state));
             }
+
+            this.$emit('state-save', state);
         },
         restoreState() {
             const storage = this.getStorage();
@@ -1536,6 +1538,8 @@ export default {
                     this.d_selectionKeys = restoredState.d_selectionKeys;
                     this.$emit('update:selection', restoredState.selection);
                 }
+
+                this.$emit('state-restore', restoredState);
             }
         },
         saveColumnWidths(state) {
@@ -1619,7 +1623,7 @@ export default {
         },
         createLazyLoadEvent(event) {
             let filterMatchModes;
-            if (this.hasFilters) {
+            if (this.hasFilters()) {
                 filterMatchModes = {};
                 this.columns.forEach(col => {
                     if (col.field) {
@@ -1639,6 +1643,15 @@ export default {
                 filterMatchModes: filterMatchModes
             };
         },
+        hasFilters() {
+            return this.filters && Object.keys(this.filters).length > 0 && this.filters.constructor === Object;
+        },
+        hasGlobalFilter() {
+            return this.filters && Object.prototype.hasOwnProperty.call(this.filters, 'global');
+        },
+        getChildren() {
+            return this.$slots.default ? this.$slots.default() : null;
+        }
     },
     computed: {
         containerClass() {
@@ -1656,7 +1669,11 @@ export default {
         },
         columns() {
             let cols = [];
-            let children = this.$slots.default();
+            let children = this.getChildren();
+
+            if (!children) {
+                return;
+            }
 
             children.forEach(child => {
                 if (child.dynamicChildren)
@@ -1707,42 +1724,50 @@ export default {
             return this.frozenColumns.length > 0;
         },
         headerColumnGroup() {
-            const children = this.$slots.default();
-            for (let child of children) {
-                if (child.type.name === 'columngroup' && child.props?.type === 'header') {
-                    return child;
+            const children = this.getChildren();
+            if (children) {
+                for (let child of children) {
+                    if (child.type.name === 'columngroup' && child.props?.type === 'header') {
+                        return child;
+                    }
                 }
             }
 
             return null;
         },
         frozenHeaderColumnGroup() {
-            const children = this.$slots.default();
-            for (let child of children) {
-                if (child.type.name === 'columngroup' && child.props?.type === 'frozenheader') {
-                    return child;
+            const children = this.getChildren();
+            if (children) {
+                for (let child of children) {
+                    if (child.type.name === 'columngroup' && child.props?.type === 'frozenheader') {
+                        return child;
+                    }
                 }
             }
 
             return null;
         },
         footerColumnGroup() {
-            const children = this.$slots.default();
-            for (let child of children) {
-                if (child.type.name === 'columngroup' && child.props?.type === 'footer') {
-                    return child;
+            const children = this.getChildren();
+            if (children) {
+                for (let child of children) {
+                    if (child.type.name === 'columngroup' && child.props?.type === 'footer') {
+                        return child;
+                    }
                 }
             }
 
             return null;
         },
         frozenFooterColumnGroup() {
-           const children = this.$slots.default();
-            for (let child of children) {
-                if (child.type.name === 'columngroup' && child.props?.type === 'frozenfooter') {
-                    return child;
+           const children = this.getChildren();
+            if (children) {
+                for (let child of children) {
+                    if (child.type.name === 'columngroup' && child.props?.type === 'frozenfooter') {
+                        return child;
+                    }
                 }
-            }
+           }
 
             return null;
         },
@@ -1761,7 +1786,7 @@ export default {
                             data = this.sortMultiple(data);
                     }
 
-                    if (this.hasFilters) {
+                    if (this.hasFilters()) {
                         data = this.filter(data);
                     }
 
@@ -1804,12 +1829,6 @@ export default {
         },
         sorted() {
             return this.d_sortField || (this.d_multiSortMeta && this.d_multiSortMeta.length > 0);
-        },
-        hasFilters() {
-            return this.filters && Object.keys(this.filters).length > 0 && this.filters.constructor === Object;
-        },
-        hasGlobalFilter() {
-            return this.filters && Object.prototype.hasOwnProperty.call(this.filters, 'global');
         },
         loadingIconClass() {
             return ['p-datatable-loading-icon pi-spin', this.loadingIcon];

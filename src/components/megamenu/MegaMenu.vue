@@ -35,7 +35,7 @@
                                                 <span :class="getSubmenuIcon()" v-if="item.items"></span>
                                             </a>
                                         </li>
-                                        <li class="p-menu-separator" :style="item.style" v-if="visible(item) && item.separator" :key="'separator' + i" role="separator"></li>
+                                        <li :class="['p-menu-separator', item.class]" :style="item.style" v-if="visible(item) && item.separator" :key="'separator' + i" role="separator"></li>
                                     </template>
                                 </ul>
                             </div>
@@ -51,8 +51,8 @@
 </template>
 
 <script>
-import DomHandler from '../utils/DomHandler';
-import Ripple from '../ripple/Ripple';
+import {DomHandler} from 'primevue/utils';
+import Ripple from 'primevue/ripple';
 
 export default {
     props: {
